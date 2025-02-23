@@ -1397,12 +1397,15 @@ async def download_model(
     url_idx: Optional[int] = None,
     user=Depends(get_admin_user),
 ):
-    allowed_hosts = ["https://huggingface.co/", "https://github.com/"]
+    allowed_urls = [
+        "https://huggingface.co/TheBloke/stablelm-zephyr-3b-GGUF/resolve/main/stablelm-zephyr-3b.Q2_K.gguf",
+        "https://github.com/some/repo/file"
+    ]
 
-    if not any(form_data.url.startswith(host) for host in allowed_hosts):
+    if form_data.url not in allowed_urls:
         raise HTTPException(
             status_code=400,
-            detail="Invalid file_url. Only URLs from allowed hosts are permitted.",
+            detail="Invalid file_url. Only specific URLs from allowed hosts are permitted.",
         )
 
     if url_idx is None:
