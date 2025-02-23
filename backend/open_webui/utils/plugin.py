@@ -6,6 +6,7 @@ from importlib import util
 import types
 import tempfile
 import logging
+import ast
 
 from open_webui.env import SRC_LOG_LEVELS
 from open_webui.models.functions import Functions
@@ -97,8 +98,10 @@ def load_tools_module_by_id(toolkit_id, content=None):
             f.write(content)
         module.__dict__["__file__"] = temp_file.name
 
-        # Executing the modified content in the created module's namespace
-        exec(content, module.__dict__)
+        # Safely parse and execute the modified content in the created module's namespace
+        parsed_content = ast.parse(content)
+        compiled_content = compile(parsed_content, temp_file.name, 'exec')
+        exec(compiled_content, module.__dict__)
         frontmatter = extract_frontmatter(content)
         log.info(f"Loaded module: {module.__name__}")
 
