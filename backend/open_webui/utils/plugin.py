@@ -142,6 +142,7 @@ def load_function_module_by_id(function_id, content=None):
         module.__dict__["__file__"] = temp_file.name
 
         # Execute the modified content in the created module's namespace
+        exec(content, {"__builtins__": {}})
         exec(content, module.__dict__)
         frontmatter = extract_frontmatter(content)
         log.info(f"Loaded module: {module.__name__}")
