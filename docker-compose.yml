@@ -1,0 +1,14 @@
+services:
+  open-webui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghcr.io/open-webui/open-webui:v1.0.0
+    container_name: open-webui
+    volumes:
+      - open-webui:/app/backend/data
+    ports:
+      - 8080:8080
+
+volumes:
+  open-webui: {}
