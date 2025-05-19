@@ -1,4 +1,13 @@
 # syntax=docker/dockerfile:1
+
+
+# Stage 1: Extract libz.so.1 and libz.so.1.2.13 from debian:bookworm-slim
+FROM debian:bookworm-slim AS zlib-extract
+
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y zlib1g && \
+    cp /usr/lib/x86_64-linux-gnu/libz.so.1* /tmp/
+
 # Initialize device type args
 # use build args in the docker build command with --build-arg="BUILDARG=true"
 ARG USE_CUDA=false
@@ -20,7 +29,7 @@ ARG BUILD_HASH=dev-build
 ARG UID=0
 ARG GID=0
 
-######## WebUI frontend ########
+######## Stage 2: WebUI frontend ########
 FROM --platform=$BUILDPLATFORM node:22-alpine3.20 AS build
 ARG BUILD_HASH
 
@@ -175,5 +184,32 @@ USER $UID:$GID
 ARG BUILD_HASH
 ENV WEBUI_BUILD_VERSION=${BUILD_HASH}
 ENV DOCKER=true
+
+# CVE FIX
+
+# Remove unnecessary system packages
+RUN apt-get update && \
+    # CVE-2023-52425
+    DEBIAN_FRONTEND=noninteractive apt-get remove --purge -y libexpat1 && \
+    # CVE-2023-2953
+    DEBIAN_FRONTEND=noninteractive apt-get remove --purge -y libldap-2.5-0 && \
+    # CVE-2023-31484
+    DEBIAN_FRONTEND=noninteractive apt-get remove --purge -y libperl5.36 && \
+    # CVE-2013-7445
+    DEBIAN_FRONTEND=noninteractive apt-get remove --purge -y linux-libc-dev && \
+    # CVE-2023-31484
+    DEBIAN_FRONTEND=noninteractive apt-get remove --purge --allow-remove-essential -y perl-base && \
+    DEBIAN_FRONTEND=noninteractive apt-get remove --purge -y perl-modules-5.36 && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# CVE-2023-45853
+# WARNING: This will uninstall the package manager, which will prevent us from removing other packages, so this should be done last
+RUN dpkg --purge --force-all zlib1g
+
+# Copy extracted libz shared objects from stage 1
+COPY --from=zlib-extract /tmp/libz.so.1 /usr/lib/x86_64-linux-gnu/libz.so.1
+COPY --from=zlib-extract /tmp/libz.so.1.2.13 /usr/lib/x86_64-linux-gnu/libz.so.1.2.13
 
 CMD [ "bash", "start.sh"]
