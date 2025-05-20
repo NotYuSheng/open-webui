@@ -379,22 +379,8 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
             )
         user = Auths.authenticate_user_by_trusted_header(trusted_email)
     elif WEBUI_AUTH == False:
-        admin_email = "admin@localhost"
-        admin_password = "admin"
+        raise HTTPException(400, detail="This version is not intended for use without")
 
-        if Users.get_user_by_email(admin_email.lower()):
-            user = Auths.authenticate_user(admin_email.lower(), admin_password)
-        else:
-            if Users.get_num_users() != 0:
-                raise HTTPException(400, detail=ERROR_MESSAGES.EXISTING_USERS)
-
-            await signup(
-                request,
-                response,
-                SignupForm(email=admin_email, password=admin_password, name="User"),
-            )
-
-            user = Auths.authenticate_user(admin_email.lower(), admin_password)
     else:
         user = Auths.authenticate_user(form_data.email.lower(), form_data.password)
 
