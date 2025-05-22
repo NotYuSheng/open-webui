@@ -605,18 +605,25 @@ async def signout(request: Request, response: Response):
 
 
 @router.post("/add", response_model=SigninResponse)
-async def add_user(form_data: AddUserForm, user=Depends(get_admin_user)):
+async def add_user(
+    form_data: AddUserForm,
+    admin_user=Depends(get_admin_user),
+):
     if not validate_email_format(form_data.email.lower()):
         raise HTTPException(
-            status.HTTP_400_BAD_REQUEST, detail=ERROR_MESSAGES.INVALID_EMAIL_FORMAT
+            status.HTTP_400_BAD_REQUEST,
+            detail=ERROR_MESSAGES.INVALID_EMAIL_FORMAT
         )
 
     if Users.get_user_by_email(form_data.email.lower()):
-        raise HTTPException(400, detail=ERROR_MESSAGES.EMAIL_TAKEN)
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST,
+            detail=ERROR_MESSAGES.EMAIL_TAKEN
+        )
 
     try:
         hashed = get_password_hash(form_data.password)
-        user = Auths.insert_new_auth(
+        new_user = Auths.insert_new_auth(
             form_data.email.lower(),
             hashed,
             form_data.name,
@@ -624,23 +631,27 @@ async def add_user(form_data: AddUserForm, user=Depends(get_admin_user)):
             form_data.role,
         )
 
-        if user:
-            token = create_token(data={"id": user.id})
+        if new_user:
+            token = create_token(data={"id": new_user.id})
             return {
                 "token": token,
                 "token_type": "Bearer",
-                "id": user.id,
-                "email": user.email,
-                "name": user.name,
-                "role": user.role,
-                "profile_image_url": user.profile_image_url,
+                "id": new_user.id,
+                "email": new_user.email,
+                "name": new_user.name,
+                "role": new_user.role,
+                "profile_image_url": new_user.profile_image_url,
             }
         else:
-            raise HTTPException(500, detail=ERROR_MESSAGES.CREATE_USER_ERROR)
+            raise HTTPException(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=ERROR_MESSAGES.CREATE_USER_ERROR
+            )
     except Exception as err:
-        log.error(f"Add user error: {str(err)}")
+        log.error(f"Add user error: {err}")
         raise HTTPException(
-            500, detail="An internal error occurred while adding the user."
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An internal error occurred while adding the user."
         )
 
 

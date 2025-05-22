@@ -6,19 +6,4 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- 🦾 **First release**: n/a (first release)
-
-### Changed
-- n/a (first release)
-
-### Fixed
-- n/a (first release)
-
-### Deprecated
-- n/a (first release)
-
-### Removed
-- n/a (first release)
-
-### Security
-- n/a (first release)
+- 🦾 **First release**: The first iteration of this application

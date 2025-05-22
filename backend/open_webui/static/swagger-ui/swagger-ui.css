@@ -36,7 +36,7 @@
 	overflow: visible;
 }
 .swagger-ui pre {
-	font-family: monospace, monospace;
+	font-family: monospace;
 	font-size: 1em;
 }
 .swagger-ui a {
@@ -47,7 +47,6 @@
 	border-bottom: none;
 	text-decoration: underline;
 	-webkit-text-decoration: underline dotted;
-	text-decoration: underline dotted;
 }
 .swagger-ui b,
 .swagger-ui strong {
@@ -57,7 +56,7 @@
 .swagger-ui code,
 .swagger-ui kbd,
 .swagger-ui samp {
-	font-family: monospace, monospace;
+	font-family: monospace;
 	font-size: 1em;
 }
 .swagger-ui dfn {

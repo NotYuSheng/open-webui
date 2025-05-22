@@ -49,6 +49,18 @@ def search_bing(
 def main():
     parser = argparse.ArgumentParser(description="Search Bing from the command line.")
     parser.add_argument(
+        "--subscription-key",
+        type=str,
+        required=True,
+        help="Your Bing Search API subscription key."
+    )
+    parser.add_argument(
+        "--endpoint",
+        type=str,
+        required=True,
+        help="The Bing Search API endpoint URL."
+    )
+    parser.add_argument(
         "query",
         type=str,
         default="Top 10 international news today",
@@ -69,5 +81,5 @@ def main():
 
     args = parser.parse_args()
 
-    results = search_bing(args.locale, args.query, args.count, args.filter)
+    results = search_bing(args.subscription_key, args.endpoint, args.locale, args.query, args.count, args.filter)
     pprint(results)

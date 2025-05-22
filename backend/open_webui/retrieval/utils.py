@@ -675,7 +675,7 @@ def generate_openai_batch_embeddings(
         if "data" in data:
             return [elem["embedding"] for elem in data["data"]]
         else:
-            raise "Something went wrong :/"
+            raise RuntimeError("Error: retrieval/utils.py 001")
     except Exception as e:
         log.exception(f"Error generating openai batch embeddings: {e}")
         return None
@@ -721,7 +721,7 @@ def generate_ollama_batch_embeddings(
         if "embeddings" in data:
             return data["embeddings"]
         else:
-            raise "Something went wrong :/"
+            raise RuntimeError("Error: retrieval/utils.py 002")
     except Exception as e:
         log.exception(f"Error generating ollama batch embeddings: {e}")
         return None
