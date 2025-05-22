@@ -734,6 +734,7 @@ async def delete_model(
     url_idx: Optional[int] = None,
     user=Depends(get_admin_user),
 ):
+    r = None
     if url_idx is None:
         await get_all_models(request, user=user)
         models = request.app.state.OLLAMA_MODELS
@@ -795,6 +796,7 @@ async def delete_model(
 async def show_model_info(
     request: Request, form_data: ModelNameForm, user=Depends(get_verified_user)
 ):
+    r = None
     await get_all_models(request, user=user)
     models = request.app.state.OLLAMA_MODELS
 
@@ -868,6 +870,7 @@ async def embed(
 ):
     log.info(f"generate_ollama_batch_embeddings {form_data}")
 
+    r = None
     if url_idx is None:
         await get_all_models(request, user=user)
         models = request.app.state.OLLAMA_MODELS
@@ -955,6 +958,7 @@ async def embeddings(
 ):
     log.info(f"generate_ollama_embeddings {form_data}")
 
+    r = None
     if url_idx is None:
         await get_all_models(request, user=user)
         models = request.app.state.OLLAMA_MODELS
@@ -1136,6 +1140,7 @@ async def generate_chat_completion(
     user=Depends(get_verified_user),
     bypass_filter: Optional[bool] = False,
 ):
+
     if BYPASS_MODEL_ACCESS_CONTROL:
         bypass_filter = True
 
@@ -1649,7 +1654,7 @@ async def upload_model(
                 )
 
                 if create_resp.ok:
-                    log.info(f"API SUCCESS!")  # DEBUG
+                    log.info("API SUCCESS!")
                     done_msg = {
                         "done": True,
                         "blob": f"sha256:{file_hash}",
