@@ -576,23 +576,29 @@ class SafeWebBaseLoader(WebBaseLoader):
     async def alazy_load(self) -> AsyncIterator[Document]:
         """Async lazy load text from the url(s) in web_path."""
         results = await self.ascrape_all(self.web_paths)
+
         for path, soup in zip(self.web_paths, results):
             text = soup.get_text(**self.bs_get_text_kwargs)
             metadata = {"source": path}
+
             if title := soup.find("title"):
                 metadata["title"] = title.get_text()
+
             if description := soup.find("meta", attrs={"name": "description"}):
-                metadata["description"] = description.get(
-                    "content", "No description found."
-                )
+                metadata["description"] = description.get("content", "No description found.")
+
             if html := soup.find("html"):
                 metadata["language"] = html.get("lang", "No language found.")
+
             yield Document(page_content=text, metadata=metadata)
+
 
     async def aload(self) -> list[Document]:
         """Load data into Document objects."""
-        return [document async for document in self.alazy_load()]
-
+        documents: list[Document] = []
+        async for document in self.alazy_load():
+            documents.append(document)
+        return documents
 
 def get_web_loader(
     urls: Union[str, Sequence[str]],

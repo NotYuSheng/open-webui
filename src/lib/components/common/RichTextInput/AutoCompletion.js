@@ -142,26 +142,6 @@ export const AIAutocompletion = Extension.create({
 						const node = $head.parent;
 
 						if (event.key === 'Tab') {
-							// if (!node.attrs['data-suggestion']) {
-							//   // Generate completion
-							//   if (loading) return true
-							//   loading = true
-							//   const prompt = node.textContent
-							//   this.options.generateCompletion(prompt).then(suggestion => {
-							//     if (suggestion && suggestion.trim() !== '') {
-							//       dispatch(state.tr.setNodeMarkup($head.before(), null, {
-							//         ...node.attrs,
-							//         class: 'ai-autocompletion',
-							//         'data-prompt': prompt,
-							//         'data-suggestion': suggestion,
-							//       }))
-							//     }
-							//     // If suggestion is empty or null, do nothing
-							//   }).finally(() => {
-							//     loading = false
-							//   })
-							// }
-
 							if (node.attrs['data-suggestion']) {
 								// Accept suggestion
 								const suggestion = node.attrs['data-suggestion'];
@@ -243,27 +223,6 @@ export const AIAutocompletion = Extension.create({
 						// 	const { $head } = selection;
 						// 	const node = $head.parent;
 
-						// 	// Reset debounce timer on mouse click
-						// 	clearTimeout(debounceTimer);
-
-						// 	// If a suggestion exists and the cursor moves, remove the suggestion
-						// 	if (
-						// 		node.type.name === 'paragraph' &&
-						// 		node.attrs['data-suggestion'] &&
-						// 		view.state.selection.$head.pos !== view.state.selection.$head.end()
-						// 	) {
-						// 		dispatch(
-						// 			state.tr.setNodeMarkup($head.before(), null, {
-						// 				...node.attrs,
-						// 				class: null,
-						// 				'data-prompt': null,
-						// 				'data-suggestion': null
-						// 			})
-						// 		);
-						// 	}
-
-						// 	return false;
-						// }
 						mouseup: (view, event) => {
 							const { state, dispatch } = view;
 

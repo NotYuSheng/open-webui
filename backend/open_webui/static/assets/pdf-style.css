@@ -258,11 +258,6 @@ tbody + tbody {
 	margin-top: 0;
 }
 
-/* Remove top margin of <ul> following a <p> */
-.markdown-section p + ul {
-	margin-top: 0;
-}
-
 /* Remove bottom margin of <p> if it is followed by a <ul> */
 /* Note: :has is not supported in CSS, so you would need JavaScript for this behavior */
 .markdown-section p {

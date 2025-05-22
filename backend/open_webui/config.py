@@ -623,6 +623,12 @@ load_oauth_providers()
 LICENSE_KEY = os.environ.get("LICENSE_KEY", "")
 
 ####################################
+# Static DIR
+####################################
+
+STATIC_DIR = Path(os.getenv("STATIC_DIR", OPEN_WEBUI_DIR / "static")).resolve()
+
+####################################
 # STORAGE PROVIDER
 ####################################
 
@@ -2105,8 +2111,6 @@ WEB_SEARCH_DOMAIN_FILTER_LIST = PersistentConfig(
     "WEB_SEARCH_DOMAIN_FILTER_LIST",
     "rag.web.search.domain.filter_list",
     [
-        # "wikipedia.com",
-        # "wikimedia.org",
         # "wikidata.org",
     ],
 )
