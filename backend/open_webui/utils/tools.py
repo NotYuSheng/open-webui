@@ -129,7 +129,6 @@ def get_tools(
                         "spec": spec,
                     }
 
-                    # TODO: if collision, prepend toolkit name
                     if function_name in tools_dict:
                         log.warning(
                             f"Tool {function_name} already exists in another tools!"
@@ -157,7 +156,6 @@ def get_tools(
                 )
 
             for spec in tool.specs:
-                # TODO: Fix hack for OpenAI API
                 # Some times breaks OpenAI but others don't. Leaving the comment
                 for val in spec.get("parameters", {}).get("properties", {}).values():
                     if val["type"] == "str":
@@ -177,7 +175,6 @@ def get_tools(
                     tool_function, extra_params
                 )
 
-                # TODO: Support Pydantic models as parameters
                 if callable.__doc__ and callable.__doc__.strip() != "":
                     s = re.split(":(param|return)", callable.__doc__, 1)
                     spec["description"] = s[0]
@@ -196,7 +193,6 @@ def get_tools(
                     },
                 }
 
-                # TODO: if collision, prepend toolkit name
                 if function_name in tools_dict:
                     log.warning(
                         f"Tool {function_name} already exists in another tools!"

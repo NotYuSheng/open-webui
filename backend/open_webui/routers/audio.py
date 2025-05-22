@@ -1074,7 +1074,6 @@ def get_elevenlabs_voices(api_key: str) -> dict:
     """
 
     try:
-        # TODO: Add retries
         response = requests.get(
             "https://api.elevenlabs.io/v1/voices",
             headers={

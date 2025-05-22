@@ -1,4 +1,3 @@
-# TODO: Implement a more intelligent load balancing mechanism for distributing requests among multiple backend instances.
 # Current implementation uses a simple round-robin approach (random.choice). Consider incorporating algorithms like weighted round-robin,
 # least connections, or least response time for better resource utilization and performance optimization.
 
@@ -669,6 +668,7 @@ async def copy_model(
     url_idx: Optional[int] = None,
     user=Depends(get_admin_user),
 ):
+    r = None
     if url_idx is None:
         await get_all_models(request, user=user)
         models = request.app.state.OLLAMA_MODELS
@@ -1202,7 +1202,6 @@ async def generate_chat_completion(
     prefix_id = api_config.get("prefix_id", None)
     if prefix_id:
         payload["model"] = payload["model"].replace(f"{prefix_id}.", "")
-    # payload["keep_alive"] = -1 # keep alive forever
     return await send_post_request(
         url=f"{url}/api/chat",
         payload=json.dumps(payload),
@@ -1213,7 +1212,6 @@ async def generate_chat_completion(
     )
 
 
-# TODO: we should update this part once Ollama supports other types
 class OpenAIChatMessageContent(BaseModel):
     type: str
     model_config = ConfigDict(extra="allow")
@@ -1574,7 +1572,6 @@ async def download_model(
         return None
 
 
-# TODO: Progress bar does not reflect size & duration of upload.
 @router.post("/models/upload")
 @router.post("/models/upload/{url_idx}")
 async def upload_model(

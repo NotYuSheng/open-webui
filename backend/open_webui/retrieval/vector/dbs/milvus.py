@@ -181,7 +181,6 @@ class MilvusClient(VectorDBBase):
             data=vectors,
             limit=limit,
             output_fields=["data", "metadata"],
-            # search_params=search_params # Potentially add later if needed
         )
         return self._result_to_search_result(result)
 

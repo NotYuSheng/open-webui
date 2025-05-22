@@ -339,7 +339,6 @@ def get_models(request: Request, user=Depends(get_verified_user)):
                 {"id": "imagen-3-0-generate-002", "name": "imagen-3.0 generate-002"},
             ]
         elif request.app.state.config.IMAGE_GENERATION_ENGINE == "comfyui":
-            # TODO - get models from comfyui
             headers = {
                 "Authorization": f"Bearer {request.app.state.config.COMFYUI_API_KEY}"
             }
