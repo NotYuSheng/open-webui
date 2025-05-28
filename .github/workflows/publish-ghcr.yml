@@ -4,7 +4,8 @@ on:
   # Triggers minor version ( vX.Y.Z-ShortHash )
   push:
     branches:
-      - master
+      - main
+      - ci/publish-ghcr
   # Triggers major version ( vX.Y.Z )
   release:
     types: [created]
